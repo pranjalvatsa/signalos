@@ -13,6 +13,16 @@ export class CodingAgent extends BaseAgent {
 
     const branch = `feature/${base}-${Date.now()}`;
 
+    // 🔥 Code preview
+    const generatedCode = `// Auto-generated code for: ${payload?.title}
+
+export function handler(req, res) {
+  res.json({ message: "Hello from ${payload?.title}" });
+}`;
+
+    console.log('\n🧾 Generated Code Preview:\n');
+    console.log(generatedCode);
+
     let prUrl = 'N/A';
 
     try {
@@ -26,7 +36,7 @@ export class CodingAgent extends BaseAgent {
         repo,
         branch,
         title: `feat: ${payload?.title}`,
-        content: `Generated for: ${payload?.title}`
+        content: generatedCode
       });
 
       this.executionEngine.addLog(executionId, 'PR created successfully');
@@ -37,6 +47,7 @@ export class CodingAgent extends BaseAgent {
 
     const result = {
       branch,
+      preview: generatedCode,
       pullRequest: {
         title: `feat: ${payload?.title}`,
         url: prUrl
