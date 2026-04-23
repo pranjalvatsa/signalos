@@ -7,7 +7,11 @@ export class CodingAgent extends BaseAgent {
   async run(executionId: string, payload?: any): Promise<void> {
     this.executionEngine.addLog(executionId, 'Generating implementation...');
 
-    const branch = `feature/${(payload?.title || 'generated').toLowerCase().replace(/\s+/g, '-')}`;
+    const base = (payload?.title || 'generated')
+      .toLowerCase()
+      .replace(/\s+/g, '-');
+
+    const branch = `feature/${base}-${Date.now()}`;
 
     let prUrl = 'N/A';
 
