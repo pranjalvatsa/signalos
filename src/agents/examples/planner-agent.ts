@@ -14,6 +14,5 @@ export class PlannerAgent extends BaseAgent {
     this.executionEngine.addLog(executionId, 'Spec generated');
     this.executionEngine.updateStatus(executionId, 'waiting_approval');
 
-    return spec;
-  }
+    this.executionEngine.setResult(executionId, spec);  }
 }

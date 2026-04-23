@@ -42,4 +42,11 @@ export class ExecutionEngine {
   listExecutions() {
     return Array.from(this.executions.values());
   }
+
+  setResult(id: string, result: unknown) {
+  const exec = this.executions.get(id);
+  if (!exec) return;
+  exec.result = result;
+  exec.updatedAt = new Date().toISOString();
+}
 }
