@@ -1,5 +1,5 @@
 import { runSoftwareDeliveryDemo } from './workflows/software-delivery-demo';
-
+import 'dotenv/config';
 async function main() {
   const request = process.argv.slice(2).join(' ').trim() || 'Build user authentication API';
 
