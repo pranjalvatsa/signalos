@@ -17,8 +17,10 @@ export async function runSoftwareDeliveryDemo(requestTitle: string) {
   const planner = new PlannerAgent(executionEngine);
   const coder = new CodingAgent(executionEngine);
 
-  console.log('\n🚀 Request received');
-  await sleep(500);
+  console.log('\n==============================');
+  console.log('🚀 REQUEST PHASE');
+  console.log('==============================');
+  await sleep(400);
 
   const execution = executionEngine.createExecution({
     workflowType: 'software_delivery',
@@ -27,20 +29,30 @@ export async function runSoftwareDeliveryDemo(requestTitle: string) {
     approvalRequired: true
   });
 
+  console.log(`📝 Request: ${requestTitle}`);
   console.log(`🆔 Execution ID: ${execution.id}`);
-  await sleep(500);
+  await sleep(700);
 
-  console.log('\n🧠 Planner: Thinking...');
-  await sleep(800);
+  console.log('\n==============================');
+  console.log('🧠 PLANNING PHASE');
+  console.log('==============================');
+
+  console.log('🧠 Thinking...');
+  await sleep(1000);
 
   console.log('📄 Generating spec...');
   executionEngine.updateStatus(execution.id, 'running');
   await planner.run(execution.id, execution.payload);
 
   const current = executionEngine.getExecution(execution.id);
-  console.log('📄 Spec ready:', JSON.stringify(current?.result, null, 2));
+  console.log('\n📄 Spec ready:');
+  console.log(JSON.stringify(current?.result, null, 2));
+  await sleep(800);
 
-  console.log('\n⏳ Awaiting human approval...');
+  console.log('\n==============================');
+  console.log('⏳ APPROVAL PHASE');
+  console.log('==============================');
+
   const answer = await askQuestion('Approve this plan? (y/n): ');
 
   if (answer.toLowerCase() !== 'y') {
@@ -50,10 +62,14 @@ export async function runSoftwareDeliveryDemo(requestTitle: string) {
   }
 
   console.log('✅ Approved');
-  await sleep(500);
+  await sleep(800);
 
-  console.log('\n👨‍💻 Coding Agent: Writing code...');
-  await sleep(700);
+  console.log('\n==============================');
+  console.log('👨‍💻 CODING PHASE');
+  console.log('==============================');
+
+  console.log('⚙️ Writing code...');
+  await sleep(1000);
 
   await coder.run(execution.id, execution.payload);
 
@@ -61,12 +77,15 @@ export async function runSoftwareDeliveryDemo(requestTitle: string) {
   const result: any = final?.result;
 
   console.log('\n🚀 Pushing changes to GitHub...');
-  await sleep(800);
+  await sleep(1200);
 
   console.log('\n🎉 SUCCESS!');
   console.log(`🔗 PR: ${result?.pullRequest?.url}`);
 
-  console.log('\n📊 Execution Timeline:');
+  console.log('\n==============================');
+  console.log('📊 EXECUTION SUMMARY');
+  console.log('==============================');
+
   console.log('1. Request received');
   console.log('2. Spec generated');
   console.log('3. Approval granted');
