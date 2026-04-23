@@ -27,6 +27,7 @@ export class CodingAgent extends BaseAgent {
 
       this.executionEngine.addLog(executionId, 'PR created successfully');
     } catch (err: any) {
+      console.error("❌ GitHub Error:", err.response?.data || err.message);
       this.executionEngine.addLog(executionId, `GitHub failed: ${err.message}`, 'error');
     }
 
