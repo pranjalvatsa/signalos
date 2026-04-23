@@ -29,7 +29,7 @@ And it will:
 
 ## 🎥 Demo
 
-*(Add demo.gif here)*
+https://github.com/user-attachments/assets/60e083d3-78aa-4238-a056-825b8c6ba03d
 
 ---
 
