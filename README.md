@@ -16,8 +16,7 @@ It will:
 
 ## 🎥 Demo
 
-![SignalOS Demo](./demo.gif)
-
+![SignalOS Demo](./demo-v2.gif)
 ### What you're seeing
 
 - AI generates a product spec  
