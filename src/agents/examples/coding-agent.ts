@@ -1,27 +1,44 @@
 import { BaseAgent } from '../base-agent';
+import { createPullRequest } from '../../integrations/github';
 
 export class CodingAgent extends BaseAgent {
   name = 'coding-agent';
 
   async run(executionId: string, payload?: any): Promise<void> {
-    this.executionEngine.addLog(executionId, 'Generating implementation plan from approved spec');
+    this.executionEngine.addLog(executionId, 'Generating implementation...');
 
-    const mockResult = {
-      branchName: `feature/${(payload?.title || 'generated-feature').toLowerCase().replace(/\s+/g, '-')}`,
-      filesChanged: [
-        'src/routes/generated-feature.ts',
-        'src/services/generated-feature.service.ts',
-        'src/tests/generated-feature.test.ts'
-      ],
+    const branch = `feature/${(payload?.title || 'generated').toLowerCase().replace(/\s+/g, '-')}`;
+
+    let prUrl = 'N/A';
+
+    try {
+      const token = process.env.GITHUB_TOKEN!;
+      const owner = process.env.GITHUB_OWNER!;
+      const repo = process.env.GITHUB_REPO!;
+
+      prUrl = await createPullRequest({
+        token,
+        owner,
+        repo,
+        branch,
+        title: `feat: ${payload?.title}`,
+        content: `Generated for: ${payload?.title}`
+      });
+
+      this.executionEngine.addLog(executionId, 'PR created successfully');
+    } catch (err: any) {
+      this.executionEngine.addLog(executionId, `GitHub failed: ${err.message}`, 'error');
+    }
+
+    const result = {
+      branch,
       pullRequest: {
-        title: `feat: ${payload?.title || 'Generated Feature'}`,
-        url: 'https://github.com/example/repo/pull/1'
+        title: `feat: ${payload?.title}`,
+        url: prUrl
       }
     };
 
-    this.executionEngine.addLog(executionId, 'Mock code generated');
-    this.executionEngine.addLog(executionId, `Mock PR prepared: ${mockResult.pullRequest.title}`);
-    this.executionEngine.setResult(executionId, mockResult);
+    this.executionEngine.setResult(executionId, result);
     this.executionEngine.updateStatus(executionId, 'completed');
   }
 }
