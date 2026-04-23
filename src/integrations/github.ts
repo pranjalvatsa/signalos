@@ -36,14 +36,27 @@ export async function createPullRequest({
     sha
   }, { headers });
 
-  // 4. Create file
+  // 4. Check if file exists
+  let existingSha: string | undefined;
+  try {
+    const fileData = await axios.get(`${GITHUB_API}/repos/${owner}/${repo}/contents/generated.txt`, {
+      headers,
+      params: { ref: branch }
+    });
+    existingSha = fileData.data.sha;
+  } catch (err: any) {
+    // file doesn't exist, ignore
+  }
+
+  // 5. Create or update file
   await axios.put(`${GITHUB_API}/repos/${owner}/${repo}/contents/generated.txt`, {
     message: 'Add generated file',
     content: Buffer.from(content).toString('base64'),
-    branch
+    branch,
+    ...(existingSha ? { sha: existingSha } : {})
   }, { headers });
 
-  // 5. Create PR
+  // 6. Create PR
   const pr = await axios.post(`${GITHUB_API}/repos/${owner}/${repo}/pulls`, {
     title,
     head: branch,
