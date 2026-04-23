@@ -1,12 +1,5 @@
-import { SignalBus } from './core/signal-bus';
-import { Orchestrator } from './core/orchestrator';
+import { runSoftwareDeliveryDemo } from './workflows/software-delivery-demo';
 
-const signalBus = new SignalBus();
-const orchestrator = new Orchestrator(signalBus);
+console.log('🚀 Starting SignalOS Demo...');
 
-// Example signal
-signalBus.publish({ type: 'example_event', payload: { message: 'Hello SignalOS' } });
-
-orchestrator.start();
-
-console.log('SignalOS started');
+runSoftwareDeliveryDemo();
