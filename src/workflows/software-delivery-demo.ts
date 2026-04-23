@@ -25,7 +25,6 @@ export async function runSoftwareDeliveryDemo(requestTitle: string) {
   const planner = new PlannerAgent(executionEngine);
   const coder = new CodingAgent(executionEngine);
 
-  // Step 1: Request
   console.log('\n🚀 Request received');
 
   const execution = executionEngine.createExecution({
@@ -37,7 +36,6 @@ export async function runSoftwareDeliveryDemo(requestTitle: string) {
 
   console.log(`🆔 Execution ID: ${execution.id}`);
 
-  // Step 2: Planning
   console.log('\n🧠 Planner: Generating spec...');
   executionEngine.updateStatus(execution.id, 'running');
   await planner.run(execution.id, execution.payload);
@@ -45,7 +43,6 @@ export async function runSoftwareDeliveryDemo(requestTitle: string) {
   const current = executionEngine.getExecution(execution.id);
   console.log('📄 Spec ready:', JSON.stringify(current?.result, null, 2));
 
-  // Step 3: Approval
   console.log('\n⏳ Waiting for approval...');
 
   const answer = await askQuestion('Approve this plan? (y/n): ');
@@ -59,14 +56,14 @@ export async function runSoftwareDeliveryDemo(requestTitle: string) {
   console.log('✅ Approved');
   approvalEngine.approve(execution.id, 'cli-user');
 
-  // Step 4: Coding
   console.log('\n👨‍💻 Coding Agent: Generating code...');
   await coder.run(execution.id, execution.payload);
 
   const final = executionEngine.getExecution(execution.id);
+  const result: any = final?.result;
 
-  console.log('\n🔀 PR Created:', final?.result?.pullRequest?.title);
-  console.log('🔗 PR Link:', final?.result?.pullRequest?.url);
+  console.log('\n🔀 PR Created:', result?.pullRequest?.title);
+  console.log('🔗 PR Link:', result?.pullRequest?.url);
 
   console.log('\n🎉 Workflow Completed');
 }
