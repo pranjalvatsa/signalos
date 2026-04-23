@@ -16,7 +16,7 @@ It will:
 
 ## 🎥 Demo
 
-![SignalOS Demo](.demo.gif)
+![SignalOS Demo](./demo.gif)
 
 ### What you're seeing
 
