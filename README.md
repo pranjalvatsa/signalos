@@ -1,8 +1,30 @@
 # 🚀 SignalOS
 
-**Control plane for agentic workflows with approvals, tracking, and real-world actions**
+**Turn a product request into a real GitHub PR using AI + human approval**
 
-SignalOS lets you build production-style AI workflows that don’t just generate text — they **take actions with guardrails**.
+Give SignalOS a request like:
+
+`Build login API`
+
+It will:
+→ generate a spec  
+→ ask for approval  
+→ write code  
+→ create a real GitHub PR  
+
+---
+
+## 🎥 Demo
+
+![SignalOS Demo](./demo.gif)
+
+### What you're seeing
+
+- AI generates a product spec  
+- waits for human approval  
+- writes code  
+- pushes to GitHub  
+- opens a real PR  
 
 ---
 
@@ -27,9 +49,15 @@ And it will:
 
 ---
 
-## 🎥 Demo
+## ⚡ Try it in 30 seconds
 
-https://github.com/user-attachments/assets/60e083d3-78aa-4238-a056-825b8c6ba03d
+```
+git clone https://github.com/pranjalvatsa/signalos
+cd signalos
+npm install
+cp .env.example .env
+npm run dev -- "Build login API"
+```
 
 ---
 
@@ -57,12 +85,6 @@ GITHUB_OWNER=your_username
 GITHUB_REPO=your_repo
 ```
 
-### 3. Run
-
-```
-npm run dev -- "Build login API"
-```
-
 ---
 
 ## 🔐 GitHub Token
@@ -77,18 +99,14 @@ https://github.com/settings/tokens
 
 ## 🧠 Why SignalOS?
 
-Most AI agent frameworks:
+Most AI tools stop at generating text.
 
-- ❌ don’t track execution
-- ❌ don’t support approvals
-- ❌ can’t take real actions
+But real systems need to:
+- track execution
+- handle approvals
+- take real actions (like creating PRs)
 
-SignalOS adds:
-
-- ✅ execution tracking
-- ✅ human-in-the-loop approvals
-- ✅ workflow orchestration
-- ✅ real integrations (GitHub)
+SignalOS is built for that.
 
 ---
 
