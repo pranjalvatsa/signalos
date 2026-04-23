@@ -1,48 +1,72 @@
-import { SignalBus } from '../core/signal-bus';
+import readline from 'readline';
 import { ExecutionEngine } from '../core/execution-engine';
 import { ApprovalEngine } from '../core/approval-engine';
 import { PlannerAgent } from '../agents/examples/planner-agent';
 import { CodingAgent } from '../agents/examples/coding-agent';
 
-export function runSoftwareDeliveryDemo() {
-  const signalBus = new SignalBus();
+function askQuestion(query: string): Promise<string> {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  return new Promise((resolve) => {
+    rl.question(query, (answer) => {
+      rl.close();
+      resolve(answer);
+    });
+  });
+}
+
+export async function runSoftwareDeliveryDemo(requestTitle: string) {
   const executionEngine = new ExecutionEngine();
   const approvalEngine = new ApprovalEngine(executionEngine);
 
   const planner = new PlannerAgent(executionEngine);
   const coder = new CodingAgent(executionEngine);
 
-  // Step 1: Business request
+  // Step 1: Request
+  console.log('\n🚀 Request received');
+
   const execution = executionEngine.createExecution({
     workflowType: 'software_delivery',
     signalType: 'request_submitted',
-    payload: { title: 'User Authentication API' },
+    payload: { title: requestTitle },
     approvalRequired: true
   });
 
-  console.log('\n🚀 New Request Submitted');
-  console.log('Execution ID:', execution.id);
+  console.log(`🆔 Execution ID: ${execution.id}`);
 
-  // Step 2: Planner runs
+  // Step 2: Planning
+  console.log('\n🧠 Planner: Generating spec...');
   executionEngine.updateStatus(execution.id, 'running');
-  planner.run(execution.id, execution.payload);
+  await planner.run(execution.id, execution.payload);
 
+  const current = executionEngine.getExecution(execution.id);
+  console.log('📄 Spec ready:', JSON.stringify(current?.result, null, 2));
+
+  // Step 3: Approval
   console.log('\n⏳ Waiting for approval...');
 
-  // Step 3: Simulate approval
-  setTimeout(() => {
-    console.log('\n✅ Approved by user');
-    approvalEngine.approve(execution.id, 'demo-user');
+  const answer = await askQuestion('Approve this plan? (y/n): ');
 
-    // Step 4: Coding agent runs
-    coder.run(execution.id, execution.payload);
+  if (answer.toLowerCase() !== 'y') {
+    console.log('❌ Rejected by user');
+    approvalEngine.reject(execution.id, 'cli-user');
+    return;
+  }
 
-    // Final state
-    setTimeout(() => {
-      const result = executionEngine.getExecution(execution.id);
-      console.log('\n🎉 Workflow Completed');
-      console.log(JSON.stringify(result, null, 2));
-    }, 500);
+  console.log('✅ Approved');
+  approvalEngine.approve(execution.id, 'cli-user');
 
-  }, 1000);
+  // Step 4: Coding
+  console.log('\n👨‍💻 Coding Agent: Generating code...');
+  await coder.run(execution.id, execution.payload);
+
+  const final = executionEngine.getExecution(execution.id);
+
+  console.log('\n🔀 PR Created:', final?.result?.pullRequest?.title);
+  console.log('🔗 PR Link:', final?.result?.pullRequest?.url);
+
+  console.log('\n🎉 Workflow Completed');
 }
