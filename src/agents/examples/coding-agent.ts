@@ -1,5 +1,6 @@
 import { BaseAgent } from '../base-agent';
 import { createPullRequest } from '../../integrations/github';
+import { typeText, sleep } from '../../utils/cli-effects';
 
 export class CodingAgent extends BaseAgent {
   name = 'coding-agent';
@@ -13,15 +14,12 @@ export class CodingAgent extends BaseAgent {
 
     const branch = `feature/${base}-${Date.now()}`;
 
-    // 🔥 Code preview
-    const generatedCode = `// Auto-generated code for: ${payload?.title}
+    // 🔥 Diff-style preview
+    const diff = `\n+ // Auto-generated code for: ${payload?.title}\n\n+ export function handler(req, res) {\n+   res.json({ message: "Hello from ${payload?.title}" });\n+ }\n`;
 
-export function handler(req, res) {
-  res.json({ message: "Hello from ${payload?.title}" });
-}`;
-
-    console.log('\n🧾 Generated Code Preview:\n');
-    console.log(generatedCode);
+    console.log('\n🧾 Code Diff Preview:\n');
+    await sleep(600);
+    await typeText(diff, 6);
 
     let prUrl = 'N/A';
 
@@ -30,13 +28,22 @@ export function handler(req, res) {
       const owner = process.env.GITHUB_OWNER!;
       const repo = process.env.GITHUB_REPO!;
 
+      console.log('\n🚀 Committing changes...');
+      await sleep(700);
+
+      console.log('🌿 Creating branch...');
+      await sleep(700);
+
+      console.log('🔀 Opening pull request...');
+      await sleep(900);
+
       prUrl = await createPullRequest({
         token,
         owner,
         repo,
         branch,
         title: `feat: ${payload?.title}`,
-        content: generatedCode
+        content: diff
       });
 
       this.executionEngine.addLog(executionId, 'PR created successfully');
@@ -47,7 +54,7 @@ export function handler(req, res) {
 
     const result = {
       branch,
-      preview: generatedCode,
+      preview: diff,
       pullRequest: {
         title: `feat: ${payload?.title}`,
         url: prUrl
