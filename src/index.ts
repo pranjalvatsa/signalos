@@ -1,5 +1,15 @@
 import { runSoftwareDeliveryDemo } from './workflows/software-delivery-demo';
 
-console.log('🚀 Starting SignalOS Demo...');
+async function main() {
+  const request = process.argv.slice(2).join(' ').trim() || 'Build user authentication API';
 
-runSoftwareDeliveryDemo();
+  console.log('🚀 Starting SignalOS Demo...');
+  console.log(`📝 Request: ${request}`);
+
+  await runSoftwareDeliveryDemo(request);
+}
+
+main().catch((error) => {
+  console.error('❌ SignalOS failed to run:', error);
+  process.exit(1);
+});
