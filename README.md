@@ -1,70 +1,116 @@
-# SignalOS
+# 🚀 SignalOS
 
-Open-source control plane for agentic workflows.
+**Control plane for agentic workflows with approvals, tracking, and real-world actions**
 
-SignalOS helps you build production-grade AI systems with:
-- event-driven orchestration
-- human approval loops (HITL)
-- execution tracking and audit logs
-- pluggable agent registry
-- workflow-safe state transitions
+SignalOS lets you build production-style AI workflows that don’t just generate text — they **take actions with guardrails**.
 
-## Why SignalOS?
+---
 
-Most agent demos stop at prompt execution. Real systems need:
-- traceability
-- approval gates
-- orchestration
-- retries and state
-- observability
+## ⚡ What it does
 
-SignalOS provides the backbone for those workflows.
-
-## Core concepts
-
-- **Signals**: typed events that trigger workflows
-- **Executions**: tracked runs with status, logs, payloads, and results
-- **Approvals**: human-in-the-loop gates before risky actions
-- **Agents**: pluggable workers that react to signals or explicit runs
-- **Orchestrator**: routes signals to the right agents and workflows
-
-## Example use cases
-
-- software delivery pipeline: request -> spec -> approval -> PR
-- content workflows with approvals
-- internal business process automation
-- multi-agent operational copilots
-
-## Project structure
-
-```text
-src/
-  core/
-    orchestrator/
-    signal-bus/
-    execution-engine/
-    approval-engine/
-  agents/
-    base/
-    registry/
-    examples/
-  workflows/
-    software-delivery/
-  types/
+```
+Request → Spec → Approval → GitHub PR
 ```
 
-## Current status
+Run this:
 
-This repo contains the initial scaffold for the SignalOS control plane.
+```
+npm run dev -- "Build login API"
+```
 
-## Roadmap
+And it will:
 
-- persistent adapters for Mongo/Postgres/Redis
-- GitHub and Jira integrations
-- approval inbox API
-- workflow state machine support
-- hosted control plane
+- 🧠 Generate a spec
+- ⏳ Ask for approval (HITL)
+- 👨‍💻 Generate code
+- 🔀 Create a real GitHub PR
 
-## License
+---
 
-MIT
+## 🎥 Demo
+
+*(Add demo.gif here)*
+
+---
+
+## 🛠️ Setup
+
+### 1. Clone
+
+```
+git clone https://github.com/pranjalvatsa/signalos
+cd signalos
+npm install
+```
+
+### 2. Setup environment
+
+```
+cp .env.example .env
+```
+
+Fill values:
+
+```
+GITHUB_TOKEN=your_token
+GITHUB_OWNER=your_username
+GITHUB_REPO=your_repo
+```
+
+### 3. Run
+
+```
+npm run dev -- "Build login API"
+```
+
+---
+
+## 🔐 GitHub Token
+
+Create a **classic token** with:
+
+- repo permission
+
+https://github.com/settings/tokens
+
+---
+
+## 🧠 Why SignalOS?
+
+Most AI agent frameworks:
+
+- ❌ don’t track execution
+- ❌ don’t support approvals
+- ❌ can’t take real actions
+
+SignalOS adds:
+
+- ✅ execution tracking
+- ✅ human-in-the-loop approvals
+- ✅ workflow orchestration
+- ✅ real integrations (GitHub)
+
+---
+
+## 🧱 Core Concepts
+
+- Signals → trigger workflows  
+- Executions → track state + logs  
+- Agents → perform actions  
+- Approvals → add safety  
+
+---
+
+## 🚀 Roadmap
+
+- Better execution logs UI
+- Multi-file code generation
+- GitHub diff preview
+- Jira integration
+- Hosted control plane
+
+---
+
+## ⭐️ If you like this
+
+Star the repo — helps a lot 🙌
