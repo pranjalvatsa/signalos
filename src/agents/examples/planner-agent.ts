@@ -3,7 +3,7 @@ import { BaseAgent } from '../base-agent';
 export class PlannerAgent extends BaseAgent {
   name = 'planner-agent';
 
-  async run(executionId: string, payload?: any) {
+  async run(executionId: string, payload?: any): Promise<void> {
     this.executionEngine.addLog(executionId, 'Generating spec from request');
 
     const spec = {
@@ -12,7 +12,7 @@ export class PlannerAgent extends BaseAgent {
     };
 
     this.executionEngine.addLog(executionId, 'Spec generated');
+    this.executionEngine.setResult(executionId, spec);
     this.executionEngine.updateStatus(executionId, 'waiting_approval');
-
-    this.executionEngine.setResult(executionId, spec);  }
+  }
 }
